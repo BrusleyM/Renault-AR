@@ -33,7 +33,7 @@ public class InteractionsManager : MonoBehaviour
         TouchSimulation.Enable();
         EnhancedTouchSupport.Enable();
         EnhanceTouch.Touch.onFingerDown += PlaceCar;
-        EnhanceTouch.Touch.onFingerDown += ManipulateScale;
+        EnhanceTouch.Touch.onFingerMove += ManipulateScale;
     }
 
     private void OnDisable()
@@ -41,7 +41,7 @@ public class InteractionsManager : MonoBehaviour
         TouchSimulation.Disable();
         EnhancedTouchSupport.Disable();
         EnhanceTouch.Touch.onFingerDown -= PlaceCar;
-        EnhanceTouch.Touch.onFingerDown -= ManipulateScale;
+        EnhanceTouch.Touch.onFingerMove -= ManipulateScale;
 
     }
     private void PlaceCar(Finger finger)
@@ -68,6 +68,7 @@ public class InteractionsManager : MonoBehaviour
 
             }
         }
+        EnhanceTouch.Touch.onFingerDown -= PlaceCar;
     }
     public void StopPlaneDetection()
     {
