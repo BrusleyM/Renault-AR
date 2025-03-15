@@ -1,0 +1,38 @@
+name: Unity CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Unity
+      uses: game-ci/unity-setup@v2
+      with:
+        unityVersion: 2022.3.23f1
+
+    - name: Run tests
+      run: |
+        /opt/unity/Editor/Unity -runTests -projectPath . -testResults results.xml -logFile /dev/stdout
+      continue-on-error: true
+
+    - name: Publish test results
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: results.xml
+
+    - name: Build project
+      run: |
+        /opt/unity/Editor/Unity -quit -batchmode -projectPath . -buildTarget StandaloneWindows64 -buildPath Build/Windows
