@@ -28,8 +28,8 @@ public class WelcomeManager : MonoBehaviour
         SetUser();
 
         GameManager.Instance.SetUserInfo(_userInfo);
-        GameManager.Instance.SetSelectedCar(carPrefabs[selectedIndex]);
-        GameManager.Instance.LaunchGame("AR");
+        GameManager.Instance.SetSelectedCar(carPrefabs[selectedIndex], carDropdown.options[selectedIndex].text);
+        GameManager.Instance.LoadScene("AR");
     }
     void SetUser()
     {

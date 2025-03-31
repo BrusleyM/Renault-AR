@@ -8,13 +8,14 @@ using EnhanceTouch = UnityEngine.InputSystem.EnhancedTouch;
 
 public class InteractionsManager : MonoBehaviour
 {
-    
+
     GameObject _carPrefab;
     GameObject _car;
     ARPlaneManager _planeManager;
     ARRaycastManager _rayManager;
     List<ARRaycastHit> _hits = new List<ARRaycastHit>();
-    [SerializeField]ARSession _session;
+    [SerializeField] ARSession _session;
+    [SerializeField] GameObject _featuresUI;
 
     float _initialPinchDistance;
     Vector3 _initialScale;
@@ -27,6 +28,7 @@ public class InteractionsManager : MonoBehaviour
     private void Start()
     {
         _session.Reset();
+        _featuresUI.SetActive(false);
     }
     private void OnEnable()
     {
@@ -46,21 +48,28 @@ public class InteractionsManager : MonoBehaviour
     }
     private void PlaceCar(Finger finger)
     {
-        if (finger.index != 0&&_car!=null)
+        if (finger.index != 0 && _car != null)
             return;
-        if(_rayManager.Raycast(finger.currentTouch.screenPosition,_hits,TrackableType.PlaneWithinPolygon))
+        if (_rayManager.Raycast(finger.currentTouch.screenPosition, _hits, TrackableType.PlaneWithinPolygon))
         {
-            foreach(ARRaycastHit hit in _hits)
+            foreach (ARRaycastHit hit in _hits)
             {
                 Pose pose = hit.pose;
+
+                ARPlane plane = _planeManager.GetPlane(hit.trackableId);
+
+                foreach (var existingPlane in _planeManager.trackables)
+                {
+                    existingPlane.gameObject.SetActive(existingPlane == plane);
+                }
                 _car = Instantiate(_carPrefab, pose.position, pose.rotation);
-                if (_planeManager.GetPlane(hit.trackableId).alignment==PlaneAlignment.HorizontalUp)
+                if (plane.alignment == PlaneAlignment.HorizontalUp)
                 {
                     Vector3 pos = _car.transform.position;
                     Vector3 camerapos = Camera.main.transform.position;
                     Vector3 dir = camerapos - pos;
                     Vector3 targetRotEuler = Quaternion.LookRotation(dir).eulerAngles;
-                    var scaled=Vector3.Scale(targetRotEuler, _car.transform.up.normalized);
+                    var scaled = Vector3.Scale(targetRotEuler, _car.transform.up.normalized);
                     Quaternion targetRot = Quaternion.Euler(scaled);
                     _car.transform.rotation = _car.transform.rotation * targetRot;
                     StopPlaneDetection();
@@ -68,6 +77,8 @@ public class InteractionsManager : MonoBehaviour
 
             }
         }
+        _featuresUI.SetActive(true);
+
         EnhanceTouch.Touch.onFingerDown -= PlaceCar;
     }
     public void StopPlaneDetection()
@@ -78,7 +89,7 @@ public class InteractionsManager : MonoBehaviour
 
             foreach (var plane in _planeManager.trackables)
             {
-                plane.gameObject.SetActive(false); 
+                plane.gameObject.SetActive(false);
             }
         }
     }

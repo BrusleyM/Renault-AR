@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public Person UserInfo => _userInfo;
     private GameObject _selectedCar;
     public GameObject SelectedCar => _selectedCar;
+    private string _carName;
+    public string CarName => _carName;
 
     private void Awake()
     {
@@ -23,15 +25,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetSelectedCar(GameObject carPrefab)
+    public void SetSelectedCar(GameObject carPrefab,string name)
     {
         _selectedCar = carPrefab;
+        _carName = name;
     }
     public void SetUserInfo(Person person)
     {
         _userInfo = person;
     }
-    public void LaunchGame(string sceneName)
+    public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }

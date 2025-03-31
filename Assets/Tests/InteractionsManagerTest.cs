@@ -33,7 +33,7 @@ public class InteractionsManagerTests
         // Set up the GameManager with the selected car
         var gman = new GameObject("GameManager");
         gman.AddComponent<GameManager>();
-        GameManager.Instance.SetSelectedCar(carPrefab);
+        GameManager.Instance.SetSelectedCar(carPrefab,"test");
 
         // Create a test GameObject and add the necessary AR components
         testObject = new GameObject();

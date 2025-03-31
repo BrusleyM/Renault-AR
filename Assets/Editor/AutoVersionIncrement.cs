@@ -41,6 +41,7 @@ public class AutoVersionIncrement : IPreprocessBuildWithReport
         string newVersion = $"{major}.{minor}.{patch}";
         PlayerSettings.bundleVersion = newVersion;
         PlayerSettings.Android.bundleVersionCode = currentBundleCode;
+        PlayerSettings.iOS.buildNumber = currentBundleCode.ToString();
 
         // Log the changes for review.
         Debug.Log($"[AutoVersionIncrement] Version updated to {newVersion}");
