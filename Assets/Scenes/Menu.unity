@@ -2772,7 +2772,7 @@ MonoBehaviour:
   carPrefabs:
   - {fileID: 4619266146532842718, guid: a3c8016f681a240fe917cce494f314d9, type: 3}
   - {fileID: 5711003969847142599, guid: 2a704909705fd254795b2a2600032cc0, type: 3}
-  - {fileID: 0}
+  - {fileID: 8557559943617605948, guid: 03c2f404b1f514c9caaa925ee449efda, type: 3}
   _name: {fileID: 584262869}
   _surname: {fileID: 2011471883}
   _id: {fileID: 1692663368}

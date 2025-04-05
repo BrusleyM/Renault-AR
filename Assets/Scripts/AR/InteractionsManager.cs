@@ -62,9 +62,10 @@ public class InteractionsManager : MonoBehaviour
                 {
                     existingPlane.gameObject.SetActive(existingPlane == plane);
                 }
-                _car = Instantiate(_carPrefab, pose.position, pose.rotation);
                 if (plane.alignment == PlaneAlignment.HorizontalUp)
                 {
+
+                    _car = Instantiate(_carPrefab, pose.position, pose.rotation);
                     Vector3 pos = _car.transform.position;
                     Vector3 camerapos = Camera.main.transform.position;
                     Vector3 dir = camerapos - pos;
@@ -73,11 +74,11 @@ public class InteractionsManager : MonoBehaviour
                     Quaternion targetRot = Quaternion.Euler(scaled);
                     _car.transform.rotation = _car.transform.rotation * targetRot;
                     StopPlaneDetection();
+                    _featuresUI.SetActive(true);
                 }
 
             }
         }
-        _featuresUI.SetActive(true);
 
         EnhanceTouch.Touch.onFingerDown -= PlaceCar;
     }

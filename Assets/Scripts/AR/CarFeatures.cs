@@ -9,33 +9,30 @@ namespace ARscene
     public class CarFeatures : MonoBehaviour
     {
         [SerializeField]
-        List<Button> _btnColours;
-        [SerializeField]
         Button _back;
         [SerializeField]
         List<Material> _colours;
         [SerializeField]
         TMP_Text _carName;
         CarDetails _carDetails;
+        private void Awake()
+        {
+            _carDetails = GameManager.Instance.SelectedCar.GetComponent<CarDetails>();
+            _carName.text = GameManager.Instance.CarName;
+        }
         private void Start()
         {
-            _carDetails= GameManager.Instance.SelectedCar.GetComponent<CarDetails>();
-            _carName.text = GameManager.Instance.CarName;
-            foreach(var btn in _btnColours)
-            {
-                btn.onClick.AddListener(() =>ChangeColour(_btnColours.FindIndex(a=>a==btn)));
-            }
             _back.onClick.AddListener(() =>
             {
+                Debug.Log("loaded");
                 GameManager.Instance.LoadScene("Menu");
             });
         }
-        void ChangeColour(int colorIndex)
+        public void Testing(int index)
         {
-
-            foreach(var part in _carDetails.BodyParts)
+            foreach (var part in _carDetails.BodyParts)
             {
-                part.GetComponent<Renderer>().material = _colours[colorIndex];
+                part.GetComponent<Renderer>().material = _colours[index];
             }
         }
 
