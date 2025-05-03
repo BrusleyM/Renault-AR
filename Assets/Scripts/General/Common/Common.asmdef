@@ -1,8 +1,10 @@
 {
-    "name": "Manager",
-    "rootNamespace": "",
+    "name": "Common",
+    "rootNamespace": "Common",
     "references": [
-        "GUID:c670ff94160d84fbdaec3b1fc9100bf0"
+        "GUID:be67be5fb517e40c5ab74181971d0906",
+        "GUID:5f4b392966ee34162a1a8603bface0f2",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

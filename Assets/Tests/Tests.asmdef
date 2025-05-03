@@ -1,14 +1,18 @@
 {
     "name": "Tests",
-    "rootNamespace": "",
+    "rootNamespace": "Tests",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Unity.XR.ARFoundation",
         "Unity.InputSystem",
         "Unity.XR.ARSubsystems",
-        "ARscene",
-        "Manager"
+        "Interfaces",
+        "Common.Objects",
+        "Helpers",
+        "AR",
+        "Managers",
+        "TNRD.NSubstitute"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

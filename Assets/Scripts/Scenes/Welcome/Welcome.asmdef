@@ -1,0 +1,20 @@
+{
+    "name": "Welcome",
+    "rootNamespace": "Welcome",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:c670ff94160d84fbdaec3b1fc9100bf0",
+        "GUID:d5a8a5fb30501447fbef099e5d6f1bca",
+        "GUID:5f4b392966ee34162a1a8603bface0f2",
+        "GUID:be67be5fb517e40c5ab74181971d0906"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

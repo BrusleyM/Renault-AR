@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Managers;
 
 namespace ARscene
 {
@@ -17,7 +18,7 @@ namespace ARscene
         CarDetails _carDetails;
         private void Awake()
         {
-            _carDetails = GameManager.Instance.SelectedCar.GetComponent<CarDetails>();
+            _carDetails = GameManager.Instance.InstantiatedCar.GetComponent<CarDetails>();
             _carName.text = GameManager.Instance.CarName;
         }
         private void Start()
@@ -32,7 +33,8 @@ namespace ARscene
         {
             foreach (var part in _carDetails.BodyParts)
             {
-                part.GetComponent<Renderer>().material = _colours[index];
+                var renderer = part.GetComponent<Renderer>();
+                renderer.material = new Material(_colours[index]);
             }
         }
 

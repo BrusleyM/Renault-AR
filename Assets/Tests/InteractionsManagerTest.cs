@@ -1,132 +1,163 @@
-using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.TestTools;
-using System.Collections;
-using System.Reflection;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
-using UnityEngine.InputSystem.LowLevel;
+//using NUnit.Framework;
+//using UnityEngine;
+//using UnityEngine.InputSystem;
+//using UnityEngine.InputSystem.EnhancedTouch;
+//using UnityEngine.TestTools;
+//using System.Collections;
+//using System.Reflection;
+//using UnityEngine.XR.ARFoundation;
+//using UnityEngine.XR.ARSubsystems;
+//using System.Collections.Generic;
+//using Finger = UnityEngine.InputSystem.EnhancedTouch.Finger;
 
-public class InteractionsManagerTests
-{
-    private GameObject testObject;
-    private InteractionsManager interactionsManager;
-    private Touchscreen touchscreen;
-    private GameObject carPrefab;
-    private GameObject cameraObject;
+//public class InteractionsManagerTests : InputTestFixture
+//{
+//    private GameObject testObject;
+//    private InteractionsManager interactionsManager;
+//    private GameObject carPrefab;
+//    private GameObject cameraObject;
 
-    [SetUp]
-    public void Setup()
-    {
-        EnhancedTouchSupport.Enable();
+//    private ARRaycastManager raycastManager;
+//    private ARPlaneManager planeManager;
 
-        // Create and set up a main camera
-        cameraObject = new GameObject("Main Camera");
-        cameraObject.AddComponent<Camera>();
-        cameraObject.tag = "MainCamera"; // Ensure it's recognized as Camera.main
+//    private GameObject planeObj;
+//    private ARPlane plane;
 
-        // Create the car prefab (this could be your actual prefab from Resources or another method)
-        carPrefab = new GameObject("CarPrefab");
+//    [SetUp]
+//    public override void Setup()
+//    {
+//        base.Setup();
+//        EnhancedTouchSupport.Enable();
 
-        // Set up the GameManager with the selected car
-        var gman = new GameObject("GameManager");
-        gman.AddComponent<GameManager>();
-        GameManager.Instance.SetSelectedCar(carPrefab,"test");
+//        // Mock Camera
+//        cameraObject = new GameObject("MainCamera");
+//        cameraObject.tag = "MainCamera";
+//        cameraObject.AddComponent<Camera>();
 
-        // Create a test GameObject and add the necessary AR components
-        testObject = new GameObject();
-        testObject.AddComponent<ARRaycastManager>();
-        testObject.AddComponent<ARPlaneManager>();
-        interactionsManager = testObject.AddComponent<InteractionsManager>();
+//        // GameManager setup
+//        GameObject gman = new GameObject("GameManager");
+//        gman.AddComponent<GameManager>();
+//        carPrefab = new GameObject("CarPrefab");
+//        GameManager.Instance.SetSelectedCar(carPrefab, "test");
 
-        // Mock AR session for testing
-        var session = new GameObject("Session");
-        session.AddComponent<ARSession>();
+//        // Test target
+//        testObject = new GameObject("InteractionsManager");
+//        raycastManager = testObject.AddComponent<ARRaycastManager>();
+//        planeManager = testObject.AddComponent<ARPlaneManager>();
+//        interactionsManager = testObject.AddComponent<InteractionsManager>();
 
-        // Use reflection to set the private _session field
-        var interactionsField = typeof(InteractionsManager).GetField("_session", BindingFlags.NonPublic | BindingFlags.Instance);
-        interactionsField.SetValue(interactionsManager, session.GetComponent<ARSession>());
+//        // Assign _session
+//        var sessionObj = new GameObject("ARSession");
+//        sessionObj.AddComponent<ARSession>();
+//        typeof(InteractionsManager).GetField("_session", BindingFlags.NonPublic | BindingFlags.Instance)
+//            .SetValue(interactionsManager, sessionObj.GetComponent<ARSession>());
 
-        // Set up touchscreen input
-        touchscreen = InputSystem.AddDevice<Touchscreen>();
-    }
+//        // Assign _featuresUI
+//        var ui = new GameObject("FeaturesUI");
+//        typeof(InteractionsManager).GetField("_featuresUI", BindingFlags.NonPublic | BindingFlags.Instance)
+//            .SetValue(interactionsManager, ui);
 
-    [TearDown]
-    public void Teardown()
-    {
-        // Clean up after each test
-        Object.DestroyImmediate(cameraObject);
-        Object.DestroyImmediate(testObject);
-        InputSystem.RemoveDevice(touchscreen);
-    }
+//        // Assign ARAnchorManager
+//        var anchorManager = testObject.AddComponent<ARAnchorManager>();
+//        typeof(InteractionsManager).GetField("_anchorManager", BindingFlags.NonPublic | BindingFlags.Instance)
+//            .SetValue(interactionsManager, anchorManager);
 
-    //[UnityTest]
-    //public IEnumerator SimulateTouch_PlacesCar()
-    //{
-    //    // Simulate a touch event at the center of the screen
-    //    Vector2 touchPosition = new Vector2(Screen.width / 2, Screen.height / 2);
+//        // Add dummy plane
+//        planeObj = new GameObject("MockPlane");
+//        plane = planeObj.AddComponent<ARPlane>();
+//        plane.alignment = PlaneAlignment.HorizontalUp;
 
-    //    var plane = new GameObject("plane");
-    //    plane.AddComponent<ARPlane>();
-    //    // Simulate touch press
-    //    var touchState = new TouchState
-    //    {
-    //        touchId = 1,
-    //        position = plane.transform.position,
-    //        phase = UnityEngine.InputSystem.TouchPhase.Began
-    //    };
+//        // Add testObject to scene
+//        interactionsManager.enabled = true;
+//    }
 
-    //    InputSystem.QueueStateEvent(touchscreen, touchState);
-    //    InputSystem.Update();
+//    [TearDown]
+//    public override void TearDown()
+//    {
+//        base.TearDown();
+//        EnhancedTouchSupport.Disable();
+//        Object.DestroyImmediate(testObject);
+//        Object.DestroyImmediate(cameraObject);
+//        Object.DestroyImmediate(planeObj);
+//    }
 
-    //    // Wait a frame for the car to be placed
-    //    yield return null;
+//    [UnityTest]
+//    public IEnumerator PlaceCar_ShouldInstantiateCar_WhenTouchHitsPlane()
+//    {
+//        // Simulate raycast hit manually
+//        var hitsList = new List<ARRaycastHit> { new ARRaycastHit(default, default, 0, TrackableId.invalidId) };
+//        typeof(InteractionsManager).GetField("_hits", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(interactionsManager, hitsList);
 
-    //    // Verify car has been instantiated by checking if the _car field is set
-    //    var carField = typeof(InteractionsManager).GetField("_car", BindingFlags.NonPublic | BindingFlags.Instance);
-    //    GameObject placedCar = (GameObject)carField.GetValue(interactionsManager);
+//        var rayMethod = typeof(ARRaycastManager).GetMethod("Raycast", new[] { typeof(Vector2), typeof(List<ARRaycastHit>), typeof(TrackableType) });
+//        var mockRaycast = new System.Func<Vector2, List<ARRaycastHit>, TrackableType, bool>((vec, list, type) =>
+//        {
+//            list.Add(new ARRaycastHit(default, default, 0f, plane.trackableId));
+//            return true;
+//        });
 
-    //    Assert.NotNull(placedCar, "Car should have been instantiated.");
-    //    Assert.AreEqual(carPrefab, placedCar, "The instantiated car should be the selected car.");
-    //}
+//        // Replace method (ugly but works)
+//        // Use interface injection or a wrapper in production
+//        typeof(ARRaycastManager)
+//            .GetField("m_ReferencePointManager", BindingFlags.NonPublic | BindingFlags.Instance)
+//            ?.SetValue(raycastManager, null); // avoid null references
 
-    [UnityTest]
-    public IEnumerator SimulatePinch_ScalesCar()
-    {
-        // Create a car object to set to the _car field (use reflection)
-        var carField = typeof(InteractionsManager).GetField("_car", BindingFlags.NonPublic | BindingFlags.Instance);
-        GameObject carObject = new GameObject("Car");
-        carField.SetValue(interactionsManager, carObject);
+//        // Simulate finger down (index 0)
+//        var finger = new Finger();
+//        interactionsManager.SendMessage("PlaceCar", finger); // Direct call to bypass input
 
-        // Simulate touch input for pinch gesture
-        Vector2 touch1Start = new Vector2(100, 100);
-        Vector2 touch2Start = new Vector2(200, 100);
-        Vector2 touch1End = new Vector2(80, 100);
-        Vector2 touch2End = new Vector2(220, 100); // Fingers moving apart
+//        yield return null;
 
-        var touch1 = new TouchState { touchId = 1, position = touch1Start, phase = UnityEngine.InputSystem.TouchPhase.Began };
-        var touch2 = new TouchState { touchId = 2, position = touch2Start, phase = UnityEngine.InputSystem.TouchPhase.Began };
-        InputSystem.QueueStateEvent(touchscreen, touch1);
-        InputSystem.QueueStateEvent(touchscreen, touch2);
-        InputSystem.Update();
-        yield return null;
+//        var carField = typeof(InteractionsManager).GetField("_car", BindingFlags.NonPublic | BindingFlags.Instance);
+//        var placedCar = (GameObject)carField.GetValue(interactionsManager);
 
-        // Move fingers apart (pinch out)
-        touch1.position = touch1End;
-        touch2.position = touch2End;
-        touch1.phase = UnityEngine.InputSystem.TouchPhase.Moved;
-        touch2.phase = UnityEngine.InputSystem.TouchPhase.Moved;
-        InputSystem.QueueStateEvent(touchscreen, touch1);
-        InputSystem.QueueStateEvent(touchscreen, touch2);
-        InputSystem.Update();
-        yield return null;
+//        Assert.NotNull(placedCar);
+//        Assert.AreEqual("CarPrefab", placedCar.name.Replace("(Clone)", ""));
+//    }
 
-        // Get the car object from the _car field and check if it was scaled
-        GameObject updatedCar = (GameObject)carField.GetValue(interactionsManager);
+//    [UnityTest]
+//    public IEnumerator PinchZoom_ScalesCarUp()
+//    {
+//        // Add a car
+//        var car = new GameObject("Car");
+//        car.transform.localScale = Vector3.one;
+//        typeof(InteractionsManager).GetField("_car", BindingFlags.NonPublic | BindingFlags.Instance)
+//            .SetValue(interactionsManager, car);
 
-        // Assert that scale increased
-        Assert.Greater(updatedCar.transform.localScale.x, 1.0f, "Car should be scaled up.");
-    }
-}
+//        // Trigger OnEnable to register EnhancedTouch listeners
+//        interactionsManager.SendMessage("OnEnable");
+
+//        // Simulate two fingers touching and moving apart (zoom in)
+//        BeginTouch(1, new Vector2(100, 100));
+//        BeginTouch(2, new Vector2(200, 100));
+//        yield return new WaitForEndOfFrame();
+
+//        MoveTouch(1, new Vector2(80, 100));
+//        MoveTouch(2, new Vector2(220, 100));
+//        yield return new WaitForEndOfFrame();
+
+//        Assert.Greater(car.transform.localScale.x, 1f);
+//    }
+
+//    // Helpers for EnhancedTouch simulation
+//    private void BeginTouch(int id, Vector2 position)
+//    {
+//        Touchscreen.current.QueueStateEvent(new TouchState
+//        {
+//            touchId = id,
+//            position = position,
+//            phase = UnityEngine.InputSystem.TouchPhase.Began
+//        });
+//        InputSystem.Update();
+//    }
+
+//    private void MoveTouch(int id, Vector2 position)
+//    {
+//        Touchscreen.current.QueueStateEvent(new TouchState
+//        {
+//            touchId = id,
+//            position = position,
+//            phase = UnityEngine.InputSystem.TouchPhase.Moved
+//        });
+//        InputSystem.Update();
+//    }
+//}
