@@ -34,40 +34,23 @@ jobs:
           echo "UNITY_VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Found Unity version: ${VERSION}"
       
-      - name: Download Unity Hub
-        run: |
-          sudo apt update
-          sudo apt install -y libgconf-2-4 libgtk2.0-0 libnotify4 libnss3 libxss1 libxtst6 xdg-utils libatk-bridge2.0-0 libgbm1
-          wget https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage
-          chmod +x UnityHub.AppImage
-      
-      - name: Install Unity Editor
-        run: |
-          ./UnityHub.AppImage -- --headless install --version $UNITY_VERSION --changeset $(curl -s https://unityversion.azurewebsites.net/api/version/$UNITY_VERSION | jq -r .version)
-      
-      - name: Run PlayMode Tests
-        run: |
-          UNITY_EXECUTABLE=$(find ~/Unity/Hub/Editor -name "Unity" -type f | head -1)
-          $UNITY_EXECUTABLE \
-            -batchmode \
-            -nographics \
-            -silent-crashes \
-            -logFile /dev/stdout \
-            -projectPath "$PROJECT_PATH" \
-            -runTests \
-            -testPlatform playmode \
-            -testResults "$PROJECT_PATH/TestResults/playmode-results.xml"
+      - name: Run PlayMode Tests in Unity Docker
+        uses: docker://unityci/editor:ubuntu-${{ env.UNITY_VERSION }}-webgl
+        with:
+          args: >
+            -batchmode
+            -nographics
+            -silent-crashes
+            -logFile /dev/stdout
+            -projectPath /github/workspace/${{ env.PROJECT_PATH }}
+            -runTests
+            -testPlatform playmode
+            -testResults /github/workspace/TestResults/playmode-results.xml
       
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: PlayMode Test Results
-          path: "${{ env.PROJECT_PATH }}/TestResults"
+          path: "TestResults"
           retention-days: 1
-      
-      - name: Cleanup
-        if: always()
-        run: |
-          rm -f UnityHub.AppImage
-          find "${{ env.PROJECT_PATH }}" -name "*.log" -type f -delete
