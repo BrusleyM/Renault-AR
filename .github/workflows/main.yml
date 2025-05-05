@@ -35,17 +35,23 @@ jobs:
           echo "Found Unity version: ${VERSION}"
       
       - name: Run PlayMode Tests in Unity Docker
-        uses: docker://unityci/editor:ubuntu-${{ env.UNITY_VERSION }}-webgl
-        with:
-          args: >
-            -batchmode
-            -nographics
-            -silent-crashes
-            -logFile /dev/stdout
-            -projectPath /github/workspace/${{ env.PROJECT_PATH }}
-            -runTests
-            -testPlatform playmode
+        run: |
+          docker run \
+            --rm \
+            -v "$(pwd):/github/workspace" \
+            -e UNITY_LICENSE="1" \
+            unityci/editor:ubuntu-$UNITY_VERSION-webgl \
+            -batchmode \
+            -nographics \
+            -silent-crashes \
+            -logFile /dev/stdout \
+            -projectPath /github/workspace/$PROJECT_PATH \
+            -runTests \
+            -testPlatform playmode \
             -testResults /github/workspace/TestResults/playmode-results.xml
+        env:
+          UNITY_VERSION: ${{ env.UNITY_VERSION }}
+          PROJECT_PATH: ${{ env.PROJECT_PATH }}
       
       - name: Upload Test Results
         if: always()
