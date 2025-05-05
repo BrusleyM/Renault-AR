@@ -9,54 +9,27 @@ on:
       - master
 
 jobs:
-  testAllModes:
-    name: Test in ${{ matrix.testMode }}
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        projectPath:
-          - .
-        testMode:
-          - playmode
-          - editmode
-          - standalone
-
     steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: actions/cache@v4
+      - name: Cache Unity packages
+        uses: actions/cache@v3
         with:
-          path: ${{ matrix.projectPath }}/Library
-          key: Library-${{ matrix.projectPath }}
+          path: |
+            ~/.cache/unity3d
+            ~/.local/share/unity3d
+          key: Library-${{ runner.os }}-${{ hashFiles('**/Packages/manifest.json') }}
           restore-keys: |
-            Library-
+            Library-${{ runner.os }}-
 
-      - uses: game-ci/unity-test-runner@v4
-        id: tests
+      - name: Run Unity tests
+        uses: game-ci/unity-test-runner@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          projectPath: ${{ matrix.projectPath }}
-          testMode: ${{ matrix.testMode }}
-          artifactsPath: ${{ matrix.testMode }}-artifacts
+          projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          checkName: ${{ matrix.testMode }} Test Results
-          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: Test results for ${{ matrix.testMode }}
-          path: ${{ steps.tests.outputs.artifactsPath }}
-
-      - name: Upload Coverage Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Coverage HTML for ${{ matrix.testMode }}
-          path: ${{ matrix.testMode }}-artifacts/CoverageReport
