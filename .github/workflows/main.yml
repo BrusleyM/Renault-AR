@@ -18,8 +18,6 @@ jobs:
   test:
     name: Run PlayMode Tests
     runs-on: ubuntu-latest
-    env:
-      UNITY_PROJECT_PATH: ''
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,43 +25,49 @@ jobs:
           lfs: true
           submodules: 'recursive'
       
-      - name: Find Project Version
+      - name: Find Unity Project Version
         id: get-unity-version
         run: |
           PROJECT_PATH=$(find . -name ProjectSettings -type d -printf '%h\n' | head -1)
-          echo "UNITY_PROJECT_PATH=${PROJECT_PATH}" >> $GITHUB_ENV
+          echo "PROJECT_PATH=${PROJECT_PATH}" >> $GITHUB_ENV
           VERSION=$(grep -m 1 "m_EditorVersion:" ${PROJECT_PATH}/ProjectSettings/ProjectVersion.txt | cut -d' ' -f2)
           echo "UNITY_VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Found Unity version: ${VERSION}"
       
-      - name: Setup Unity
-        uses: game-ci/unity-setup@v2
-        with:
-          unity-version: ${{ env.UNITY_VERSION }}
+      - name: Download Unity Hub
+        run: |
+          sudo apt update
+          sudo apt install -y libgconf-2-4 libgtk2.0-0 libnotify4 libnss3 libxss1 libxtst6 xdg-utils libatk-bridge2.0-0 libgbm1
+          wget https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage
+          chmod +x UnityHub.AppImage
       
-      - name: Activate Unity License
-        uses: buildalon/activate-unity-license@v1
-        with:
-          license: 'Personal'
-          username: '${{ secrets.UNITY_EMAIL }}'
-          password: '${{ secrets.UNITY_PASSWORD }}'
+      - name: Install Unity Editor
+        run: |
+          ./UnityHub.AppImage -- --headless install --version $UNITY_VERSION --changeset $(curl -s https://unityversion.azurewebsites.net/api/version/$UNITY_VERSION | jq -r .version)
       
       - name: Run PlayMode Tests
-        uses: game-ci/unity-test-runner@v2
-        with:
-          testMode: playmode
-          artifactsPath: test-results
-          coverageOptions: none
+        run: |
+          UNITY_EXECUTABLE=$(find ~/Unity/Hub/Editor -name "Unity" -type f | head -1)
+          $UNITY_EXECUTABLE \
+            -batchmode \
+            -nographics \
+            -silent-crashes \
+            -logFile /dev/stdout \
+            -projectPath "$PROJECT_PATH" \
+            -runTests \
+            -testPlatform playmode \
+            -testResults "$PROJECT_PATH/TestResults/playmode-results.xml"
       
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: PlayMode Test Results
-          path: test-results
+          path: "${{ env.PROJECT_PATH }}/TestResults"
           retention-days: 1
       
-      - name: Cleanup Logs
+      - name: Cleanup
         if: always()
         run: |
-          find "${{ env.UNITY_PROJECT_PATH }}" -name "*.log" -type f -delete
+          rm -f UnityHub.AppImage
+          find "${{ env.PROJECT_PATH }}" -name "*.log" -type f -delete
