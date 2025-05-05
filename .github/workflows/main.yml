@@ -27,10 +27,19 @@ jobs:
           lfs: true
           submodules: 'recursive'
       
-      - name: Setup Unity (Auto-detect version)
-        uses: buildalon/unity-setup@v1
+      - name: Find Project Version
+        id: get-unity-version
+        run: |
+          PROJECT_PATH=$(find . -name ProjectSettings -type d -printf '%h\n' | head -1)
+          echo "UNITY_PROJECT_PATH=${PROJECT_PATH}" >> $GITHUB_ENV
+          VERSION=$(grep -m 1 "m_EditorVersion:" ${PROJECT_PATH}/ProjectSettings/ProjectVersion.txt | cut -d' ' -f2)
+          echo "UNITY_VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Found Unity version: ${VERSION}"
+      
+      - name: Setup Unity
+        uses: game-ci/unity-setup@v2
         with:
-          build-targets: 'Standalone' # Just needed for version detection
+          unity-version: ${{ env.UNITY_VERSION }}
       
       - name: Activate Unity License
         uses: buildalon/activate-unity-license@v1
@@ -40,19 +49,18 @@ jobs:
           password: '${{ secrets.UNITY_PASSWORD }}'
       
       - name: Run PlayMode Tests
-        uses: buildalon/unity-action@v1
+        uses: game-ci/unity-test-runner@v2
         with:
-          log-name: 'playmode-tests'
-          args: '-quit -batchmode -runTests -testPlatform playmode -testResults ./playmode-test-results.xml'
+          testMode: playmode
+          artifactsPath: test-results
+          coverageOptions: none
       
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: PlayMode Test Results
-          path: |
-            ./playmode-test-results.xml
-            ${{ env.UNITY_PROJECT_PATH }}/**/*.log
+          path: test-results
           retention-days: 1
       
       - name: Cleanup Logs
