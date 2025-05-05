@@ -11,38 +11,26 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Unity
-      uses: game-ci/unity-setup@v2
-      with:
-        unityVersion: 2022.3.23f1
+      - name: Cache Unity packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/unity3d
+            ~/.local/share/unity3d
+          key: Library-${{ runner.os }}-${{ hashFiles('**/Packages/manifest.json') }}
+          restore-keys: |
+            Library-${{ runner.os }}-
 
-    - name: Activate Unity license
-      uses: game-ci/unity-activate@v2
-      with:
-        unityEmail: ${{ secrets.UNITY_EMAIL }}
-        unityPassword: ${{ secrets.UNITY_PASSWORD }}
-
-    - name: Run tests
-      run: |
-        /opt/unity/Editor/Unity -runTests -projectPath . -testResults test-results.xml -logFile /dev/stdout
-      continue-on-error: true
-
-    - name: Publish test results
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-results
-        path: test-results.xml
-
-    - name: Build project
-      run: |
-        /opt/unity/Editor/Unity -quit -batchmode -projectPath . -buildTarget StandaloneWindows64 -buildPath Build/Windows
-
-    - name: Return Unity license
-      if: always()
-      uses: game-ci/unity-return-license@v2
+      - name: Run Unity tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: .
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
