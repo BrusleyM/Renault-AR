@@ -1,36 +1,56 @@
-name: Unity CI
+name: Test project
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
-  build:
+  testAllModes:
+    name: Test in ${{ matrix.testMode }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - .
+        testMode:
+          - playmode
+          - editmode
+          - standalone
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Cache Unity packages
-        uses: actions/cache@v3
+      - uses: actions/checkout@v4
         with:
-          path: |
-            ~/.cache/unity3d
-            ~/.local/share/unity3d
-          key: Library-${{ runner.os }}-${{ hashFiles('**/Packages/manifest.json') }}
-          restore-keys: |
-            Library-${{ runner.os }}-
+          lfs: true
 
-      - name: Run Unity tests
-        uses: game-ci/unity-test-runner@v4
+      - uses: actions/cache@v3
+        with:
+          path: ${{ matrix.projectPath }}/Library
+          key: Library-${{ matrix.projectPath }}
+          restore-keys: |
+            Library-
+
+      - uses: game-ci/unity-test-runner@v4
+        id: tests
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          projectPath: .
+          projectPath: ${{ matrix.projectPath }}
+          testMode: ${{ matrix.testMode }}
+          artifactsPath: ${{ matrix.testMode }}-artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: ${{ matrix.testMode }} Test Results
+          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+my.assembly.*'
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Test results for ${{ matrix.testMode }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Coverage HTML for ${{ matrix.testMode }}
+          path: ${{ matrix.testMode }}-artifacts/CoverageReport
