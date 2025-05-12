@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.interfaces;
+using Common.Interfaces;
+using Common.Objects;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -25,12 +25,12 @@ namespace Services
             _anchorManager = anchorManager;
         }
 
-        public void TryPlaceCar(Finger finger, GameObject carPrefab, Action<GameObject> onPlaced)
+        public void TryPlaceCar(CommonTouch touch, GameObject carPrefab, Action<GameObject> onPlaced)
         {
-            if (finger.index != 0 || HasPlacedCar) return;
+            if (HasPlacedCar) return;
 
             var hits = new List<ARRaycastHit>();
-            if (_rayManager.Raycast(finger.currentTouch.screenPosition, hits, TrackableType.PlaneWithinPolygon))
+            if (_rayManager.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
             {
                 var hit = hits.FirstOrDefault(h =>
                     _planeManager.GetPlane(h.trackableId).alignment == PlaneAlignment.HorizontalUp);

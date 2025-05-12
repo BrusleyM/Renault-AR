@@ -1,163 +1,201 @@
-//using NUnit.Framework;
-//using UnityEngine;
-//using UnityEngine.InputSystem;
-//using UnityEngine.InputSystem.EnhancedTouch;
-//using UnityEngine.TestTools;
-//using System.Collections;
-//using System.Reflection;
-//using UnityEngine.XR.ARFoundation;
-//using UnityEngine.XR.ARSubsystems;
-//using System.Collections.Generic;
-//using Finger = UnityEngine.InputSystem.EnhancedTouch.Finger;
+using NUnit.Framework;
+using NSubstitute;
+using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+using Common.Objects;
+using System;
+using ARscene;
+using Managers;
+using Object = UnityEngine.Object;
+using Services;
+using Helpers;
 
-//public class InteractionsManagerTests : InputTestFixture
-//{
-//    private GameObject testObject;
-//    private InteractionsManager interactionsManager;
-//    private GameObject carPrefab;
-//    private GameObject cameraObject;
+namespace Tests
+{
+    [TestFixture]
+    public class InteractionsManagerTests
+    {
+        private InteractionsManager _manager;
+        private GameObject _managerObj;
+        private ARCarPlacer _mockCarPlacer;
+        private ARInputHandler _mockInputHandler;
+        private ARSession _mockSession;
+        private GameObject _featuresUI;
+        private GameManager _gameManager;
 
-//    private ARRaycastManager raycastManager;
-//    private ARPlaneManager planeManager;
+        [SetUp]
+        public void Setup()
+        {
+            // Create manager with required components
+            _managerObj = new GameObject();
+            _manager = _managerObj.AddComponent<InteractionsManager>();
+            var planeManager= _managerObj.AddComponent<ARPlaneManager>();
+            var raycastManager=_managerObj.AddComponent<ARRaycastManager>();
+            _manager._anchorManager = _managerObj.AddComponent<ARAnchorManager>();
+            var pinchHandler = new PinchZoomHandler(Camera.main, new RuntimeTouchProvider());
+            // Create mock dependencies
+            _mockCarPlacer = Substitute.For<ARCarPlacer>(planeManager,raycastManager, _manager._anchorManager);
+            _mockInputHandler = Substitute.For<ARInputHandler>(pinchHandler);
 
-//    private GameObject planeObj;
-//    private ARPlane plane;
+            // Setup serialized fields through internal access
+            _mockSession = new GameObject().AddComponent<ARSession>();
+            _featuresUI = new GameObject();
+            _manager._session = _mockSession;
+            _manager._featuresUI = _featuresUI;
+            _manager._anchorManager = _managerObj.AddComponent<ARAnchorManager>();
 
-//    [SetUp]
-//    public override void Setup()
-//    {
-//        base.Setup();
-//        EnhancedTouchSupport.Enable();
+            // Inject mocks
+            typeof(InteractionsManager)
+                .GetField("_carPlacer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .SetValue(_manager, _mockCarPlacer);
 
-//        // Mock Camera
-//        cameraObject = new GameObject("MainCamera");
-//        cameraObject.tag = "MainCamera";
-//        cameraObject.AddComponent<Camera>();
+            typeof(InteractionsManager)
+                .GetField("_inputHandler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                .SetValue(_manager, _mockInputHandler);
 
-//        // GameManager setup
-//        GameObject gman = new GameObject("GameManager");
-//        gman.AddComponent<GameManager>();
-//        carPrefab = new GameObject("CarPrefab");
-//        GameManager.Instance.SetSelectedCar(carPrefab, "test");
+            // Setup GameManager
+            _gameManager = new GameObject().AddComponent<GameManager>();
+        }
 
-//        // Test target
-//        testObject = new GameObject("InteractionsManager");
-//        raycastManager = testObject.AddComponent<ARRaycastManager>();
-//        planeManager = testObject.AddComponent<ARPlaneManager>();
-//        interactionsManager = testObject.AddComponent<InteractionsManager>();
+        [TearDown]
+        public void Teardown()
+        {
+            Object.DestroyImmediate(_managerObj);
+            Object.DestroyImmediate(_mockSession.gameObject);
+            Object.DestroyImmediate(_featuresUI);
+            Object.DestroyImmediate(_gameManager.gameObject);
+        }
 
-//        // Assign _session
-//        var sessionObj = new GameObject("ARSession");
-//        sessionObj.AddComponent<ARSession>();
-//        typeof(InteractionsManager).GetField("_session", BindingFlags.NonPublic | BindingFlags.Instance)
-//            .SetValue(interactionsManager, sessionObj.GetComponent<ARSession>());
+        [Test]
+        public void OnEnable_SubscribesToAllInputEvents()
+        {
+            // Act
+            _manager.OnEnable();
 
-//        // Assign _featuresUI
-//        var ui = new GameObject("FeaturesUI");
-//        typeof(InteractionsManager).GetField("_featuresUI", BindingFlags.NonPublic | BindingFlags.Instance)
-//            .SetValue(interactionsManager, ui);
+            // Assert
+            _mockInputHandler.Received().OnTouchDown += Arg.Any<Action<CommonTouch>>();
+            _mockInputHandler.Received().OnTouchMove += Arg.Any<Action<CommonTouch>>();
+            _mockInputHandler.Received().OnTouchUp += Arg.Any<Action>();
+        }
 
-//        // Assign ARAnchorManager
-//        var anchorManager = testObject.AddComponent<ARAnchorManager>();
-//        typeof(InteractionsManager).GetField("_anchorManager", BindingFlags.NonPublic | BindingFlags.Instance)
-//            .SetValue(interactionsManager, anchorManager);
+        [Test]
+        public void OnDisable_UnsubscribesFromAllInputEvents()
+        {
+            // Act
+            _manager.OnDisable();
 
-//        // Add dummy plane
-//        planeObj = new GameObject("MockPlane");
-//        plane = planeObj.AddComponent<ARPlane>();
-//        plane.alignment = PlaneAlignment.HorizontalUp;
+            // Assert
+            _mockInputHandler.Received().OnTouchDown -= Arg.Any<Action<CommonTouch>>();
+            _mockInputHandler.Received().OnTouchMove -= Arg.Any<Action<CommonTouch>>();
+            _mockInputHandler.Received().OnTouchUp -= Arg.Any<Action>();
+        }
 
-//        // Add testObject to scene
-//        interactionsManager.enabled = true;
-//    }
+        [Test]
+        public void HandleTouchDown_WhenNoCarPlaced_AttemptsPlacement()
+        {
+            // Arrange
+            _mockCarPlacer.HasPlacedCar.Returns(false);
+            var testCar = new GameObject();
+            GameManager.Instance.SetSelectedCar(testCar, "TestCar");
+            var testTouch = new CommonTouch(new Vector2(100, 100));
 
-//    [TearDown]
-//    public override void TearDown()
-//    {
-//        base.TearDown();
-//        EnhancedTouchSupport.Disable();
-//        Object.DestroyImmediate(testObject);
-//        Object.DestroyImmediate(cameraObject);
-//        Object.DestroyImmediate(planeObj);
-//    }
+            // Act
+            _manager.HandleTouchDown(testTouch);
 
-//    [UnityTest]
-//    public IEnumerator PlaceCar_ShouldInstantiateCar_WhenTouchHitsPlane()
-//    {
-//        // Simulate raycast hit manually
-//        var hitsList = new List<ARRaycastHit> { new ARRaycastHit(default, default, 0, TrackableId.invalidId) };
-//        typeof(InteractionsManager).GetField("_hits", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(interactionsManager, hitsList);
+            // Assert
+            _mockCarPlacer.Received().TryPlaceCar(
+                Arg.Is(testTouch),
+                Arg.Is(testCar),
+                Arg.Any<Action<GameObject>>());
+        }
 
-//        var rayMethod = typeof(ARRaycastManager).GetMethod("Raycast", new[] { typeof(Vector2), typeof(List<ARRaycastHit>), typeof(TrackableType) });
-//        var mockRaycast = new System.Func<Vector2, List<ARRaycastHit>, TrackableType, bool>((vec, list, type) =>
-//        {
-//            list.Add(new ARRaycastHit(default, default, 0f, plane.trackableId));
-//            return true;
-//        });
+        [Test]
+        public void HandleTouchDown_WhenCarAlreadyPlaced_DoesNothing()
+        {
+            // Arrange
+            _mockCarPlacer.HasPlacedCar.Returns(true);
 
-//        // Replace method (ugly but works)
-//        // Use interface injection or a wrapper in production
-//        typeof(ARRaycastManager)
-//            .GetField("m_ReferencePointManager", BindingFlags.NonPublic | BindingFlags.Instance)
-//            ?.SetValue(raycastManager, null); // avoid null references
+            // Act
+            _manager.HandleTouchDown(new CommonTouch(Vector2.zero));
 
-//        // Simulate finger down (index 0)
-//        var finger = new Finger();
-//        interactionsManager.SendMessage("PlaceCar", finger); // Direct call to bypass input
+            // Assert
+            _mockCarPlacer.DidNotReceive().TryPlaceCar(
+                Arg.Any<CommonTouch>(),
+                Arg.Any<GameObject>(),
+                Arg.Any<Action<GameObject>>());
+        }
 
-//        yield return null;
+        [Test]
+        public void HandleTouchMove_WhenCarPlaced_TriggersPinchZoom()
+        {
+            // Arrange
+            _mockCarPlacer.HasPlacedCar.Returns(true);
+            var testCar = new GameObject();
+            GameManager.Instance.SetInstantiatedCar(testCar);
 
-//        var carField = typeof(InteractionsManager).GetField("_car", BindingFlags.NonPublic | BindingFlags.Instance);
-//        var placedCar = (GameObject)carField.GetValue(interactionsManager);
+            // Act
+            _manager.HandleTouchMove(new CommonTouch(Vector2.zero));
 
-//        Assert.NotNull(placedCar);
-//        Assert.AreEqual("CarPrefab", placedCar.name.Replace("(Clone)", ""));
-//    }
+            // Assert
+            _mockInputHandler.Received().HandlePinchZoom(testCar);
+        }
 
-//    [UnityTest]
-//    public IEnumerator PinchZoom_ScalesCarUp()
-//    {
-//        // Add a car
-//        var car = new GameObject("Car");
-//        car.transform.localScale = Vector3.one;
-//        typeof(InteractionsManager).GetField("_car", BindingFlags.NonPublic | BindingFlags.Instance)
-//            .SetValue(interactionsManager, car);
+        [Test]
+        public void HandleTouchMove_WhenNoCarPlaced_DoesNothing()
+        {
+            // Arrange
+            _mockCarPlacer.HasPlacedCar.Returns(false);
 
-//        // Trigger OnEnable to register EnhancedTouch listeners
-//        interactionsManager.SendMessage("OnEnable");
+            // Act
+            _manager.HandleTouchMove(new CommonTouch(Vector2.zero));
 
-//        // Simulate two fingers touching and moving apart (zoom in)
-//        BeginTouch(1, new Vector2(100, 100));
-//        BeginTouch(2, new Vector2(200, 100));
-//        yield return new WaitForEndOfFrame();
+            // Assert
+            _mockInputHandler.DidNotReceive().HandlePinchZoom(Arg.Any<GameObject>());
+        }
 
-//        MoveTouch(1, new Vector2(80, 100));
-//        MoveTouch(2, new Vector2(220, 100));
-//        yield return new WaitForEndOfFrame();
+        [Test]
+        public void HandleTouchUp_Always_ResetsPinchZoom()
+        {
+            // Act
+            _manager.HandleTouchUp();
 
-//        Assert.Greater(car.transform.localScale.x, 1f);
-//    }
+            // Assert
+            _mockInputHandler.Received().ResetPinchZoom();
+        }
 
-//    // Helpers for EnhancedTouch simulation
-//    private void BeginTouch(int id, Vector2 position)
-//    {
-//        Touchscreen.current.QueueStateEvent(new TouchState
-//        {
-//            touchId = id,
-//            position = position,
-//            phase = UnityEngine.InputSystem.TouchPhase.Began
-//        });
-//        InputSystem.Update();
-//    }
+        [Test]
+        public void Start_ResetsSessionAndHidesUI()
+        {
+            // Arrange
+            _featuresUI.SetActive(true);
 
-//    private void MoveTouch(int id, Vector2 position)
-//    {
-//        Touchscreen.current.QueueStateEvent(new TouchState
-//        {
-//            touchId = id,
-//            position = position,
-//            phase = UnityEngine.InputSystem.TouchPhase.Moved
-//        });
-//        InputSystem.Update();
-//    }
-//}
+            // Act
+            _manager.Start();
+
+            // Assert
+            Assert.IsFalse(_featuresUI.activeSelf);
+        }
+
+        [Test]
+        public void PlacementCallback_ActivatesFeaturesUI()
+        {
+            // Arrange
+            _featuresUI.SetActive(false);
+            Action<GameObject> callback = null;
+            _mockCarPlacer.When(x => x.TryPlaceCar(
+                Arg.Any<CommonTouch>(),
+                Arg.Any<GameObject>(),
+                Arg.Any<Action<GameObject>>()))
+                .Do(x => callback = x.Arg<Action<GameObject>>());
+
+            // Trigger placement
+            _manager.HandleTouchDown(new CommonTouch(Vector2.zero));
+
+            // Act - Invoke callback
+            callback?.Invoke(new GameObject());
+
+            // Assert
+            Assert.IsTrue(_featuresUI.activeSelf);
+        }
+    }
+}

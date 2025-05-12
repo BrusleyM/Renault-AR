@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Common.interfaces
+namespace Common.Interfaces
 {
     public interface ISceneLoader
     {

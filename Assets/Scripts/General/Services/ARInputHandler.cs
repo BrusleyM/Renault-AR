@@ -1,38 +1,38 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Common.interfaces;
+using Common.Objects;
 using Helpers;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using EnhanceTouch = UnityEngine.InputSystem.EnhancedTouch;
 
-namespace Services
+public class ARInputHandler : IARInputHandler
 {
-    public class ARInputHandler : IARInputHandler
+    public event Action<CommonTouch> OnTouchDown;
+    public event Action<CommonTouch> OnTouchMove;
+    public event Action OnTouchUp;
+
+    private readonly PinchZoomHandler _pinchZoomHandler;
+
+    public ARInputHandler(PinchZoomHandler pinchZoomHandler)
     {
-        public event Action<Finger> OnFingerDown;
-        public event Action<Finger> OnFingerMove;
-        public event Action<Finger> OnFingerUp;
+        _pinchZoomHandler = pinchZoomHandler;
+        EnableTouchEvents();
+    }
 
-        private readonly PinchZoomHandler _pinchZoomHandler;
+    public void HandlePinchZoom(GameObject target) => _pinchZoomHandler.Handle(target);
+    public void ResetPinchZoom() => _pinchZoomHandler.Reset();
 
-        public ARInputHandler(PinchZoomHandler pinchZoomHandler)
-        {
-            _pinchZoomHandler = pinchZoomHandler;
-            EnableTouchEvents();
-        }
+    private void EnableTouchEvents()
+    {
+        TouchSimulation.Enable();
+        EnhancedTouchSupport.Enable();
 
-        public void HandlePinchZoom(GameObject target) => _pinchZoomHandler.Handle(target);
-        public void ResetPinchZoom() => _pinchZoomHandler.Reset();
+        EnhanceTouch.Touch.onFingerDown += finger =>
+            OnTouchDown?.Invoke(new CommonTouch(finger.screenPosition));
 
-        private void EnableTouchEvents()
-        {
-            TouchSimulation.Enable();
-            EnhancedTouchSupport.Enable();
-            EnhanceTouch.Touch.onFingerDown += finger => OnFingerDown?.Invoke(finger);
-            EnhanceTouch.Touch.onFingerMove += finger => OnFingerMove?.Invoke(finger);
-            EnhanceTouch.Touch.onFingerUp += finger => OnFingerUp?.Invoke(finger);
-        }
+        EnhanceTouch.Touch.onFingerMove += finger =>
+            OnTouchMove?.Invoke(new CommonTouch(finger.screenPosition));
+
+        EnhanceTouch.Touch.onFingerUp += _ => OnTouchUp?.Invoke();
     }
 }

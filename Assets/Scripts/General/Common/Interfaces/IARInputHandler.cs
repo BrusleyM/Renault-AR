@@ -1,16 +1,13 @@
 using System;
+using Common.Objects;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 
-namespace Common.interfaces
+public interface IARInputHandler
 {
-    public interface IARInputHandler
-    {
-        event Action<Finger> OnFingerDown;
-        event Action<Finger> OnFingerMove;
-        event Action<Finger> OnFingerUp;
+    event Action<CommonTouch> OnTouchDown;
+    event Action<CommonTouch> OnTouchMove;
+    event Action OnTouchUp; 
 
-        void HandlePinchZoom(GameObject target);
-        void ResetPinchZoom();
-    }
+    void HandlePinchZoom(GameObject target);
+    void ResetPinchZoom();
 }

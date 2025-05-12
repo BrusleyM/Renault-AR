@@ -1,4 +1,4 @@
-using Common.interfaces;
+using Common.Interfaces;
 using UnityEngine.SceneManagement;
 
 namespace Services

@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Common.Objects;
 using UnityEngine;
 
-namespace Common.interfaces
+namespace Common.Interfaces
 {
     public interface IGameManager
     {

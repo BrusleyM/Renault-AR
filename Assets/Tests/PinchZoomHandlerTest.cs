@@ -1,12 +1,10 @@
 using NUnit.Framework;
 using NSubstitute;
 using UnityEngine;
-using Common.Interfaces;
 using Helpers;
 using System.Collections.Generic;
-using System.Collections;
-using UnityEngine.TestTools;
 using Common.Objects;
+using Common.Interfaces;
 
 namespace Tests
 {
@@ -14,189 +12,185 @@ namespace Tests
     public class PinchZoomHandlerTests
     {
         private PinchZoomHandler _handler;
-        private ITouchProvider _touchProvider;
+        private ITouchProvider _mockTouchProvider;
         private Camera _camera;
         private GameObject _testTarget;
+        private GameObject _testPlane;
 
         [SetUp]
         public void Setup()
         {
             _camera = new GameObject().AddComponent<Camera>();
-            _touchProvider = Substitute.For<ITouchProvider>();
-            _handler = new PinchZoomHandler(_camera, _touchProvider);
+            _camera.transform.position = new Vector3(0, 0, -10);
+            _mockTouchProvider = Substitute.For<ITouchProvider>();
+            _handler = new PinchZoomHandler(_camera, _mockTouchProvider);
             _testTarget = new GameObject();
+
+            // Setup test plane for raycasting
+            _testPlane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            _testPlane.transform.position = Vector3.forward * 10f;
         }
 
         [TearDown]
         public void Teardown()
         {
-            Object.DestroyImmediate(_camera.gameObject);
+            _handler.CleanUp();
             Object.DestroyImmediate(_testTarget);
+            Object.DestroyImmediate(_camera.gameObject);
+            Object.DestroyImmediate(_testPlane);
         }
 
         #region Core Functionality Tests
         [Test]
-        public void Handle_WithTwoFingerTouch_ProcessesInput()
+        public void InitializeZoom_CreatesParentContainer()
         {
-            // Arrange - First frame (stores initial values)
+            // Act
+            _handler.InitializeZoom(_testTarget);
+
+            // Assert
+            Assert.IsNotNull(_testTarget.transform.parent);
+            Assert.AreEqual("ZoomPivot", _testTarget.transform.parent.name);
+        }
+
+        [Test]
+        public void Handle_FirstFrame_StoresInitialValues()
+        {
+            // Arrange
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 100);
+
+            // Act
+            _handler.Handle(_testTarget);
+
+            // Assert
+            Assert.GreaterOrEqual(_handler.PreviousPinchDistance, 0f);
+        }
+        #endregion
+
+        #region Edge Case Tests
+        [Test]
+        public void Handle_ExtremePinchOut_ClampsToMaxScale()
+        {
+            // Arrange
+            _testTarget.transform.localScale = Vector3.one * 9f;
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 100);
+            _handler.Handle(_testTarget); // First frame
+
+            // Act - Extreme pinch out
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 1000);
+            _handler.Handle(_testTarget, maxScale: 10f);
+
+            // Assert
+            Assert.AreEqual(10f, _testTarget.transform.parent.localScale.x, 0.01f);
+        }
+
+        [Test]
+        public void Handle_ExtremePinchIn_ClampsToMinScale()
+        {
+            // Arrange
+            _testTarget.transform.localScale = Vector3.one;
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 200);
+            _handler.Handle(_testTarget); // First frame
+
+            // Act - Extreme pinch in
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 5);
+            _handler.Handle(_testTarget, minScale: 0.5f);
+
+            // Assert
+            Assert.AreEqual(0.5f, _testTarget.transform.parent.localScale.x, 0.01f);
+        }
+
+        [Test]
+        public void Handle_VeryCloseTouches_DoesNotCrash()
+        {
+            // Arrange
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 0.1f);
+
+            // Act & Assert (should not throw)
+            Assert.DoesNotThrow(() => _handler.Handle(_testTarget));
+        }
+
+        [Test]
+        public void Handle_NoRaycastHit_UsesDefaultDistance()
+        {
+            // Arrange - Remove plane so raycast fails
+            Object.DestroyImmediate(_testPlane);
+            SetupTwoFingerTouch(new Vector2(100, 100), new Vector2(200, 200));
+
+            // Act
+            _handler.Handle(_testTarget);
+
+            // Assert - Should use camera's nearClipPlane + 1f
+            Assert.AreNotEqual(Vector3.zero, _testTarget.transform.position);
+        }
+
+        [Test]
+        public void Handle_RapidAlternatingPinches_HandlesCorrectly()
+        {
+            // Test alternating between pinch in/out quickly
+            _testTarget.transform.localScale = Vector3.one;
+
+            // Frame 1 - Initial
             SetupTwoFingerTouch(Vector2.zero, Vector2.right * 100);
             _handler.Handle(_testTarget);
 
-            // Act - Second frame (should process scaling)
-            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 150); // 50px increase
+            // Frame 2 - Pinch out
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 150);
+            _handler.Handle(_testTarget);
+            float scaleAfterPinchOut = _testTarget.transform.parent.localScale.x;
+
+            // Frame 3 - Immediate pinch in
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 50);
             _handler.Handle(_testTarget);
 
             // Assert
-            Assert.AreNotEqual(Vector3.one, _testTarget.transform.localScale);
-            Assert.Greater(_testTarget.transform.localScale.x, 1f); // Should scale up
+            Assert.Less(_testTarget.transform.parent.localScale.x, scaleAfterPinchOut);
         }
+        #endregion
 
+        #region Cleanup Tests
         [Test]
-        public void Handle_WithSingleTouch_DoesNothing()
+        public void CleanUp_RestoresOriginalTransform()
         {
             // Arrange
-            _touchProvider.GetActiveTouches().Returns(new List<CommonTouch> { new CommonTouch(Vector2.zero) });
+            var originalPosition = _testTarget.transform.position;
+            var originalRotation = _testTarget.transform.rotation;
             var originalScale = _testTarget.transform.localScale;
 
-            // Act
+            _handler.InitializeZoom(_testTarget);
+            SetupTwoFingerTouch(Vector2.zero, Vector2.right * 100);
             _handler.Handle(_testTarget);
 
+            // Act
+            _handler.CleanUp();
+
             // Assert
+            Assert.AreEqual(originalPosition, _testTarget.transform.position);
+            Assert.AreEqual(originalRotation, _testTarget.transform.rotation);
             Assert.AreEqual(originalScale, _testTarget.transform.localScale);
         }
-        #endregion
-
-        #region Scale Calculation Tests
-        [Test]
-        public void CalculateScaleChange_PositiveDelta_ReturnsIncreasedScale()
-        {
-            // Act
-            float result = _handler.CalculateScaleChange(100f, 0.001f);
-
-            // Assert
-            Assert.AreEqual(1.1f, result);
-        }
 
         [Test]
-        public void CalculateScaleChange_NegativeDelta_ReturnsDecreasedScale()
-        {
-            // Act
-            float result = _handler.CalculateScaleChange(-50f, 0.001f);
-
-            // Assert
-            Assert.AreEqual(0.95f, result);
-        }
-
-        [Test]
-        public void CalculateNewScale_AboveMax_ClampsToMax()
-        {
-            // Act
-            Vector3 result = _handler.CalculateNewScale(
-                Vector3.one * 9f, 1.2f, 0.5f, 10f);
-
-            // Assert
-            Assert.AreEqual(10f, result.x);
-        }
-
-        [Test]
-        public void CalculateNewScale_BelowMin_ClampsToMin()
-        {
-            // Act
-            Vector3 result = _handler.CalculateNewScale(
-                Vector3.one * 0.4f, 0.9f, 0.5f, 10f);
-
-            // Assert
-            Assert.AreEqual(0.5f, result.x);
-        }
-
-        [Test]
-        public void CalculateNewScale_UniformScaling_MaintainsProportions()
+        public void CleanUp_WhenCalledTwice_DoesNotError()
         {
             // Arrange
-            Vector3 unevenScale = new Vector3(1f, 1.5f, 2f);
+            _handler.InitializeZoom(_testTarget);
 
-            // Act
-            Vector3 result = _handler.CalculateNewScale(
-                unevenScale, 1.1f, 0.5f, 10f);
-
-            // Assert
-            Assert.AreEqual(result.x * 1.5f, result.y);
-            Assert.AreEqual(result.x * 2f, result.z);
-        }
-        #endregion
-
-        #region Position Update Tests
-        [Test]
-        public void UpdateObjectPosition_WithValidDelta_MovesObject()
-        {
-            // Arrange
-            GameObject target = new GameObject();
-            Vector3 originalPos = target.transform.position;
-
-            // Act
-            _handler.UpdateObjectPosition(target, Vector3.forward * 2f);
-
-            // Assert
-            Assert.AreNotEqual(originalPos, target.transform.position);
-
-            // Cleanup
-            Object.DestroyImmediate(target);
-        }
-
-        [UnityTest]
-        public IEnumerator GetMidpointWorldPosition_WithRaycastHit_ReturnsHitPoint()
-        {
-            // Arrange
-            var plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            plane.transform.position = Vector3.forward * 5f;
-            yield return null; // Wait for physics setup
-
-            // Act
-            Vector3 result = _handler.GetMidpointWorldPosition(
-                new Vector2(Screen.width / 2, Screen.height / 2),
-                new Vector2(Screen.width / 2 + 100, Screen.height / 2));
-
-            // Assert
-            Assert.AreNotEqual(Vector3.zero, result);
-
-            // Cleanup
-            Object.DestroyImmediate(plane);
-        }
-        #endregion
-
-        #region State Management Tests
-        [Test]
-        public void StoreInitialPinchValues_SetsStateCorrectly()
-        {
-            // Act
-            _handler.StoreInitialPinchValues(100f, Vector3.forward);
-
-            // Assert
-            Assert.AreEqual(100f, _handler.PreviousPinchDistance);
-        }
-
-        [Test]
-        public void Reset_ClearsPreviousValues()
-        {
-            // Arrange
-            _handler.StoreInitialPinchValues(100f, Vector3.forward);
-
-            // Act
-            _handler.Reset();
-
-            // Assert
-            Assert.AreEqual(-1f, _handler.PreviousPinchDistance);
+            // Act & Assert
+            Assert.DoesNotThrow(() => {
+                _handler.CleanUp();
+                _handler.CleanUp(); // Second call
+            });
         }
         #endregion
 
         #region Helper Methods
         private void SetupTwoFingerTouch(Vector2 pos1, Vector2 pos2)
         {
-            _touchProvider.GetActiveTouches().Returns(new List<CommonTouch>
-    {
-        new CommonTouch(pos1),
-        new CommonTouch(pos2)
-    });
+            _mockTouchProvider.GetActiveTouches().Returns(new List<CommonTouch>
+            {
+                new CommonTouch(pos1),
+                new CommonTouch(pos2)
+            });
         }
         #endregion
     }

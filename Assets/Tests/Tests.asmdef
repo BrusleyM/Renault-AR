@@ -12,7 +12,8 @@
         "Helpers",
         "AR",
         "Managers",
-        "TNRD.NSubstitute"
+        "TNRD.NSubstitute",
+        "Services"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

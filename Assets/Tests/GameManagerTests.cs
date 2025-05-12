@@ -2,7 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using Common.Objects;
 using Managers;
-using Common.interfaces;
+using Common.Interfaces;
 using NSubstitute;
 
 namespace Tests

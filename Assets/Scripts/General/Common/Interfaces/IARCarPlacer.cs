@@ -1,12 +1,12 @@
 using System;
+using Common.Objects;
 using UnityEngine;
-using UnityEngine.InputSystem.EnhancedTouch;
 
-namespace Common.interfaces
+namespace Common.Interfaces
 {
     public interface IARCarPlacer
     {
         bool HasPlacedCar { get; }
-        void TryPlaceCar(Finger finger, GameObject carPrefab, Action<GameObject> onPlaced);
+        void TryPlaceCar(CommonTouch finger, GameObject carPrefab, Action<GameObject> onPlaced);
     }
 }
