@@ -2673,6 +2673,8 @@ MonoBehaviour:
     m_Options:
     - m_Text: Megan
       m_Image: {fileID: 21300000, guid: e18e0d2ce53684318a97407362554183, type: 3}
+    - m_Text: KIA Stinger
+      m_Image: {fileID: 21300000, guid: e9bd2edb5eade4de28e2e48048b5d8ed, type: 3}
     - m_Text: Triber
       m_Image: {fileID: 21300000, guid: d682addd91855446da13e812b8d7c6a9, type: 3}
     - m_Text: Capture
@@ -2772,6 +2774,7 @@ MonoBehaviour:
   carDropdown: {fileID: 1860488907}
   carPrefabs:
   - {fileID: 4619266146532842718, guid: a3c8016f681a240fe917cce494f314d9, type: 3}
+  - {fileID: 9090533499811905796, guid: 3432f8b1472bd4eaa8171d08eb3db1e9, type: 3}
   - {fileID: 5711003969847142599, guid: 2a704909705fd254795b2a2600032cc0, type: 3}
   - {fileID: 8557559943617605948, guid: 03c2f404b1f514c9caaa925ee449efda, type: 3}
   _name: {fileID: 584262869}
@@ -3563,9 +3566,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4df3e5fc4fd56460ba083d7ecb1495ae, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 732395006d94c49dc81e282b83c3113b, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

@@ -1,0 +1,519 @@
+fileFormatVersion: 2
+guid: bfe4d44bc9509453fafc104665a53d94
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BadgeA.005
+    second: {fileID: 2100000, guid: 45e60b416c07441d897818f2ddce0835, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Base.005
+    second: {fileID: 2100000, guid: 072c0ce4e2c654faa95c568d6d35591a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Carbon1.005
+    second: {fileID: 2100000, guid: a401f3a7b06f24d13bf684bef9213ad0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coloured.005
+    second: {fileID: 2100000, guid: 3aa2eb967dfe74ddd88b4ba4584abb5e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GlassAmberMtl.005
+    second: {fileID: 2100000, guid: 975c4e5f4b8564179ba97fa66642c8fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GlassDark.005
+    second: {fileID: 2100000, guid: 62d5cd35b1e5142de83e5624f495e8dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GlassMtl.010
+    second: {fileID: 2100000, guid: 524b65ebdd8cc467180b49eb47da9c61, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GlassMtl.011
+    second: {fileID: 2100000, guid: f6cf055d4db204a65875a1dd5dd298c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GlassRedMtl.005
+    second: {fileID: 2100000, guid: e6b09789ef3534c8abcf56720b599388, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille1A.005
+    second: {fileID: 2100000, guid: e1e6addb56658446d83ea1247e36e49d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille2A.005
+    second: {fileID: 2100000, guid: 10bfe4aae88784ae0a5809b6322305dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille3A.005
+    second: {fileID: 2100000, guid: b44d2b482481448ab9ea96cf59ce2a3e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille4A.005
+    second: {fileID: 2100000, guid: 9b594fd37468d4823aa5043a70e0b6e1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille5A.005
+    second: {fileID: 2100000, guid: 553a815321ddb459783e1b41d9039d72, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille6A.005
+    second: {fileID: 2100000, guid: 3d0a29b438444495abd998a3750c8d82, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille7A.005
+    second: {fileID: 2100000, guid: 503fcc6f6cb804f92a3c40054f0c6561, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille8A.005
+    second: {fileID: 2100000, guid: ff2ef0fa5c85742cba79b05059207948, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grille9A.005
+    second: {fileID: 2100000, guid: fec25d42f64b44b0eaedcd626d114e69, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: InteriorTilling.005
+    second: {fileID: 2100000, guid: 45252749d18ea478d9720a49ab44e548, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lights.005
+    second: {fileID: 2100000, guid: a8ac7d9ebd1834d8c89ef394d21ba0eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wheel1A.005
+    second: {fileID: 2100000, guid: a5acb362728ec42b8a64412db31e7fa3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: carpaint_metalic_orange.004
+    second: {fileID: 2100000, guid: b039f258eca24410b9ab4ae86d95787f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: engine.005
+    second: {fileID: 2100000, guid: 8be3f029b8adc4648a3a017580fa4ccf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: engine_o.005
+    second: {fileID: 2100000, guid: ed2c603179d3d46f4a4a98e2a28cec9a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: interior.005
+    second: {fileID: 2100000, guid: f2f52e71dc8cf48bbaa865ba82ddaca8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: paint1Mtl.005
+    second: {fileID: 2100000, guid: b725ff718b6be461da39fdcacc759cb1, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: BadgeA_diff
+    second: {fileID: 2800000, guid: 7150b7f39c38e4d99a8afa93fd9ee7c2, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: BadgeA_nrml
+    second: {fileID: 2800000, guid: 8e4b182562177454cb7947d557209e5f, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: BadgeA_opac
+    second: {fileID: 2800000, guid: 9371cc75acac049e98fc545ec942e77d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: BadgeA_ref
+    second: {fileID: 2800000, guid: a6f597e8b879c455b97ab913ff686623, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: EngineA_diff
+    second: {fileID: 2800000, guid: c2d272bce68dd4f32a0ded103ab2a63b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: EngineA_nrml
+    second: {fileID: 2800000, guid: ab3163ea7c1bd49ebbbaaf080ca17348, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: EngineA_opac
+    second: {fileID: 2800000, guid: 22c571294e7a24f56adec633f592d41b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: EngineA_ref
+    second: {fileID: 2800000, guid: d414c0a7f700f4351af1667bfa0af35a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille1A_diff
+    second: {fileID: 2800000, guid: a21a328b795ae4f75b744c6852d6318e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille1A_nrml
+    second: {fileID: 2800000, guid: 7cafadb6ffadb4005aac703f453fd55b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille1A_opac
+    second: {fileID: 2800000, guid: 24ca23491070849b8b02b1d4139cdfb0, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille1A_ref
+    second: {fileID: 2800000, guid: d445e90366c5f47c5ba09563fe3bf1c0, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille2A_diff
+    second: {fileID: 2800000, guid: fb3dd78e7fed74b758d7c7f4435d79fe, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille2A_nrml
+    second: {fileID: 2800000, guid: ca5fe1c1eccc041d7a9464f55ab946ed, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille2A_opac
+    second: {fileID: 2800000, guid: d82d218f51fc24019a43f29c7cf39524, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille2A_ref
+    second: {fileID: 2800000, guid: 6c1da2603f084488fb5892697ee8dc80, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille3A_diff
+    second: {fileID: 2800000, guid: 622c80f0503e3488bae25efa232bdf4b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille3A_nrml
+    second: {fileID: 2800000, guid: dcd8a8650d43c4b9f8a619e7e3d68017, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille3A_opac
+    second: {fileID: 2800000, guid: 434bfbc16b94549608de51d0d5f23f3d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille3A_ref
+    second: {fileID: 2800000, guid: 35f1269526d0149afa0c52b93ece5eb7, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille4A_diff
+    second: {fileID: 2800000, guid: 55a669ead598d4a9394cca2e72efa934, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille4A_nrml
+    second: {fileID: 2800000, guid: eec5150dcf6154d0b83c6409fd47e12d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille4A_opac
+    second: {fileID: 2800000, guid: 986338a393487428085761d747279cd4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille4A_ref
+    second: {fileID: 2800000, guid: b4bd86452a8ed4cf4aec38aeb1a2d847, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille5A_diff
+    second: {fileID: 2800000, guid: 415c930d2a9f2467e92cfd2653cfadb0, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille5A_nrml
+    second: {fileID: 2800000, guid: 8f11f358d495748a38c9a26809336ab0, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille5A_opac
+    second: {fileID: 2800000, guid: c6f5cc92dc03e4090a06427e06ced73d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille5A_ref
+    second: {fileID: 2800000, guid: c22389c0e6e5f4289922633686e3d85a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille6A_diff
+    second: {fileID: 2800000, guid: fffc7d02cf5f34acc8daf166ae5a7726, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille6A_nrml
+    second: {fileID: 2800000, guid: 2fe9cf3c10aec4dde9fb9c7255cd73b7, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille6A_opac
+    second: {fileID: 2800000, guid: 664ae5d2b0c52454288c4fa83dbd0788, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille6A_ref
+    second: {fileID: 2800000, guid: 4336906fdee5c4b7abe728a7d2651331, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille7A_diff
+    second: {fileID: 2800000, guid: 855ff802ec3494b75a8f0584bc9d80c4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille7A_nrml
+    second: {fileID: 2800000, guid: 2fe81bc37ee374d4287a1b58ed7faa83, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille7A_opac
+    second: {fileID: 2800000, guid: a1c648a27b2d44efe9f1fac2971bb397, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille7A_ref
+    second: {fileID: 2800000, guid: 296759f03888e4e08b65c103d648a3d9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille8A_diff
+    second: {fileID: 2800000, guid: 122efb1c9b5374523b4c23eba1734b3c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille8A_nrml
+    second: {fileID: 2800000, guid: 23bb0545aa347493cac56140aa2b2bc5, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille8A_opac
+    second: {fileID: 2800000, guid: 65ba9edb7e6db414f9cb94e8f412c918, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille8A_ref
+    second: {fileID: 2800000, guid: 2d43b0f2bc16641278311ca7ac64de71, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille9A_diff
+    second: {fileID: 2800000, guid: a699b6e632cc04707a7d16fd6d59e126, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille9A_nrml
+    second: {fileID: 2800000, guid: 959541e7340dc45dfb000258d03fe020, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille9A_opac
+    second: {fileID: 2800000, guid: 363b4db1086094b66882d3b8728bec0e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Grille9A_ref
+    second: {fileID: 2800000, guid: 5b7c26efd0a424e8ebaa3ccfe5ac4c71, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: InteriorA_diff
+    second: {fileID: 2800000, guid: b756a2bd27cb3452888fa268269be06d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: InteriorA_nrml
+    second: {fileID: 2800000, guid: e96783036af344be984330f576c3a396, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: InteriorA_opac
+    second: {fileID: 2800000, guid: 38de956aa442f420eb83d4209e671458, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: InteriorTillingA_diff
+    second: {fileID: 2800000, guid: f2758b3ed4b4e4024864846233c523e0, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: InteriorTillingA_nrml
+    second: {fileID: 2800000, guid: 5dd52fa8ba03444c7ab174df234ccc14, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: InteriorTillingA_opac
+    second: {fileID: 2800000, guid: 298ffd5591de44c0e91a9944848beeec, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: InteriorTillingA_ref
+    second: {fileID: 2800000, guid: a9937fb6b7c014cc586bd6755e72b444, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: LightA_diff
+    second: {fileID: 2800000, guid: 0d8158adbd0934984ae2c0d07dd09ee2, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: LightA_ref
+    second: {fileID: 2800000, guid: 669cb20422769404aaebf6b9d2ea526c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Wheel1A_diff
+    second: {fileID: 2800000, guid: f02b4fb0789d4405292cd456344bd0c8, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Wheel1A_gloss
+    second: {fileID: 2800000, guid: 2518333962d1441c88c721c9aa9aeb91, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Wheel1A_nrml
+    second: {fileID: 2800000, guid: f2c47ef046ccf48c5b85ad1c5a206208, type: 3}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

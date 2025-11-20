@@ -67,7 +67,7 @@ namespace ARscene
         {
             if (_carPlacer.HasPlacedCar) return;
 
-            _carPlacer.TryPlaceCar(touch, GameManager.Instance.SelectedCar, car =>
+            _carPlacer.TryPlaceCar(touch, GameManager.Instance.SelectedCar.Car, car =>
             {
                 GameManager.Instance.SetInstantiatedCar(car);
                 _featuresUI.SetActive(true);

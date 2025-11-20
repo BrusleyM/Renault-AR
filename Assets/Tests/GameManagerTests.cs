@@ -32,13 +32,16 @@ namespace Tests
         [Test]
         public void SetSelectedCar_SetsCarAndName()
         {
+            SelectedCar _selected = new SelectedCar();
+            _selected.Car= new GameObject("Car");
+            _selected.Name= "Lamborghini"; ;
             var carPrefab = new GameObject("Car");
             string name = "Lamborghini";
 
-            _gameManager.SetSelectedCar(carPrefab, name);
+            _gameManager.SetSelectedCar(_selected);
 
             Assert.AreEqual(carPrefab, _gameManager.SelectedCar);
-            Assert.AreEqual(name, _gameManager.CarName);
+            Assert.AreEqual(name, _gameManager.SelectedCar.Name);
         }
 
         [Test]

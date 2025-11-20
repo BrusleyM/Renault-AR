@@ -11,14 +11,12 @@ namespace Managers
         public static IGameManager Instance => _instance;
 
         private Person _userInfo = new();
-        private GameObject _selectedCar;
+        private SelectedCar _selectedCar;
         private GameObject _instantiatedCar;
-        private string _carName;
 
         public Person UserInfo => _userInfo;
-        public GameObject SelectedCar => _selectedCar;
+        public SelectedCar SelectedCar => _selectedCar;
         public GameObject InstantiatedCar => _instantiatedCar;
-        public string CarName => _carName;
 
         private ISceneLoader _sceneLoader;
 
@@ -36,10 +34,9 @@ namespace Managers
             }
         }
 
-        public void SetSelectedCar(GameObject carPrefab, string name)
+        public void SetSelectedCar(SelectedCar car)
         {
-            _selectedCar = carPrefab;
-            _carName = name;
+            _selectedCar = car;
         }
         public void SetInstantiatedCar(GameObject carPrefab)
         {

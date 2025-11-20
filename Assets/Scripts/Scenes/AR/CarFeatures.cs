@@ -19,7 +19,7 @@ namespace ARscene
         private void Awake()
         {
             _carDetails = GameManager.Instance.InstantiatedCar.GetComponent<CarDetails>();
-            _carName.text = GameManager.Instance.CarName;
+            _carName.text = GameManager.Instance.SelectedCar.Name;
         }
         private void Start()
         {
@@ -36,7 +36,13 @@ namespace ARscene
                 var renderer = part.GetComponent<Renderer>();
                 renderer.material = new Material(_colours[index]);
             }
+            GameManager.Instance.SelectedCar.Color = _colours[index].name;
         }
+        public void GetAQuote()
+        {
+            GameManager.Instance.LoadScene("Quotation");
+        }
+
 
     }
 }

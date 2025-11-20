@@ -38,13 +38,17 @@ namespace Services
                 if (hit.Equals(default(ARRaycastHit))) return;
 
                 Pose pose = hit.pose;
+                
                 _placedCar = UnityEngine.Object.Instantiate(carPrefab, pose.position, pose.rotation);
-
-                // Face camera
+                
+                    // Face camera
                 Vector3 camPos = Camera.main.transform.position;
                 Vector3 direction = camPos - _placedCar.transform.position;
                 direction.y = 0f;
-                _placedCar.transform.rotation = Quaternion.LookRotation(direction);
+                if(carPrefab.name.Contains("KIA"))
+                    _placedCar.transform.rotation = carPrefab.transform.rotation;
+                else
+                    _placedCar.transform.rotation = Quaternion.LookRotation(direction);
 
                 // Create anchor
                 var plane = _planeManager.GetPlane(hit.trackableId);

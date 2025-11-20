@@ -5,12 +5,11 @@ namespace Common.Interfaces
 {
     public interface IGameManager
     {
-        GameObject SelectedCar { get; }
+        SelectedCar SelectedCar { get; }
         GameObject InstantiatedCar { get; }
-        string CarName { get; }
         Person UserInfo { get; }
 
-        void SetSelectedCar(GameObject carPrefab, string name);
+        void SetSelectedCar(SelectedCar car);
         void SetInstantiatedCar(GameObject car);
         void SetUserInfo(Person person);
         void LoadScene(string sceneName);

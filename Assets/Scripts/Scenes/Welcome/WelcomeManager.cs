@@ -32,7 +32,9 @@ namespace Welcome
             SetUser();
 
             GameManager.Instance.SetUserInfo(_userInfo);
-            GameManager.Instance.SetSelectedCar(carPrefabs[selectedIndex], carDropdown.options[selectedIndex].text);
+            var selected = carPrefabs[selectedIndex].GetComponent<SelectedCar>();
+            selected.Car = carPrefabs[selectedIndex];
+            GameManager.Instance.SetSelectedCar(selected);
             GameManager.Instance.LoadScene("AR");
         }
         void SetUser()

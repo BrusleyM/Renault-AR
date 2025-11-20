@@ -95,8 +95,11 @@ namespace Tests
         {
             // Arrange
             _mockCarPlacer.HasPlacedCar.Returns(false);
+            SelectedCar _selected = new SelectedCar();
+            _selected.Car = new GameObject("Car");
+            _selected.Name = "Lamborghini"; ;
             var testCar = new GameObject();
-            GameManager.Instance.SetSelectedCar(testCar, "TestCar");
+            GameManager.Instance.SetSelectedCar(_selected);
             var testTouch = new CommonTouch(new Vector2(100, 100));
 
             // Act

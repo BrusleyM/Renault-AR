@@ -71,6 +71,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4972010606535874346}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1aa6de141d8144c4097cbe6eb10bf4d1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2049347614871854884}
   m_SourcePrefab: {fileID: 100100000, guid: 1aa6de141d8144c4097cbe6eb10bf4d1, type: 3}
 --- !u!1 &3143039586946265050 stripped
 GameObject:
@@ -133,3 +137,21 @@ MonoBehaviour:
   - {fileID: 8489383075578951086}
   - {fileID: 7954941570127645432}
   - {fileID: 7671199094369012753}
+--- !u!114 &2049347614871854884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8557559943617605948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08c90e32164674b5c9b5b3ddb6ba7e7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Renault Capture
+  Car: {fileID: 0}
+  Price: 459000
+  Color: Black
+  Wheels: Standard
+  Interior: Standard
